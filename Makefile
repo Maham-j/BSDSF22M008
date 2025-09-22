@@ -1,3 +1,37 @@
+# Compiler and Flags
+CC = gcc
+CFLAGS = -Iinclude -Wall -g
+
+# Directories
+SRC_DIR = src
+OBJ_DIR = obj
+BIN_DIR = bin
+LIB_DIR = lib
+
+# Files
+UTILS_OBJ = $(OBJ_DIR)/myfilefunctions.o $(OBJ_DIR)/mystrfunctions.o
+MAIN_OBJ = $(OBJ_DIR)/main.o
+TARGET = $(BIN_DIR)/client_static
+LIBRARY = $(LIB_DIR)/libmyutils.a
+
+# Build everything
+all: $(TARGET)
+
+# Rule to build the static library
+$(LIBRARY): $(UTILS_OBJ)
+	ar rcs $(LIBRARY) $(UTILS_OBJ)
+
+# Rule to build the final executable
+$(TARGET): $(MAIN_OBJ) $(LIBRARY)
+	$(CC) $(MAIN_OBJ) -L$(LIB_DIR) -lmyutils -o $(TARGET)
+
+# Compile source files into object files
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Clean build files
+clean:
+	rm -f $(OBJ_DIR)/*.o $(TARGET) $(LIBRARY)
 # ================================
 # Makefile for ROLL_NO-OS-A01 Project
 # ================================
